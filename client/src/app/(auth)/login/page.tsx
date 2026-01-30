@@ -11,6 +11,8 @@ import { FaGithub } from "react-icons/fa"
 import { FcGoogle } from "react-icons/fc"
 import { toast } from "sonner"
 import { sendOtp, verifyOtp } from "@/lib/api"
+import { useAuthRedirect } from "@/hooks/use-auth-redirect"
+
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -32,6 +34,7 @@ const otpSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter()
+  const { isLoading: isAuthCheckLoading } = useAuthRedirect() // Add this
   const [isLoading, setIsLoading] = React.useState(false)
 
   const emailForm = useForm<z.infer<typeof emailSchema>>({
@@ -49,6 +52,14 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isAuthCheckLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -99,11 +110,29 @@ export default function LoginPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" type="button" className="py-6" disabled={isLoading}>
+          <Button 
+            variant="outline" 
+            type="button" 
+            className="py-6" 
+            disabled={isLoading}
+            onClick={() => {
+              const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+              window.location.href = `${apiUrl}/auth/google`;
+            }}
+          >
             <FcGoogle className="mr-2 h-4 w-4" />
             Google
           </Button>
-          <Button variant="outline" type="button" className="py-6" disabled={isLoading}>
+          <Button 
+            variant="outline" 
+            type="button" 
+            className="py-6" 
+            disabled={isLoading}
+            onClick={() => {
+              const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+              window.location.href = `${apiUrl}/auth/github`;
+            }}
+          >
             <FaGithub className="mr-2 h-4 w-4" />
             GitHub
           </Button>

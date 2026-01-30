@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -7,25 +6,39 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
+import { ModeToggle } from "../mode-toggle"
+import { UserNav } from "./user-nav"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false)
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const pathname = usePathname()
   
-  // Don't show navbar on auth pages if you prefer a clean look, 
-  // but usually it's good to keep it or have a minimal version.
-  // For now, let's keep it everywhere but simplified.
   const isAuthPage = pathname?.startsWith('/login') || pathname?.startsWith('/signup') || pathname?.startsWith('/verify')
 
   React.useEffect(() => {
+    const checkLogin = () => {
+      const token = localStorage.getItem("token")
+      setIsLoggedIn(!!token)
+    }
+
+    checkLogin()
+    
+    // Listen for storage events (login/logout sync)
+    // We also added a custom event dispatch in the previous step
+    window.addEventListener("storage", checkLogin)
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("storage", checkLogin)
+    }
   }, [])
 
-  if (isAuthPage) return null; // Or return a minimal logo-only header
+  if (isAuthPage) return null;
 
   return (
     <header
@@ -56,14 +69,22 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
-              Log in
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button size="sm">Get Started</Button>
-          </Link>
+          <ModeToggle />
+          
+          {isLoggedIn ? (
+             <UserNav />
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
+                  Log in
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button size="sm">Get Started</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
