@@ -18,7 +18,7 @@ export default function AuthLayout({
       {/* Right side - Image */}
       <div className="hidden w-1/2 bg-muted md:block xl:w-7/12 relative">
         <Image
-          src="/images/auth_sidebar.png"
+          src="/images/auth-sidebar.png"
           alt="Authentication background"
           fill
           className="object-cover"
