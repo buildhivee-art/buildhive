@@ -8,7 +8,7 @@ export function CtaSection() {
     return (
         <section className="py-32 bg-primary text-primary-foreground relative overflow-hidden">
              {/* Background Pattern */}
-             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[16px_16px]" />
              
              <div className="container mx-auto px-4 text-center relative z-10">
                  <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Ready to upgrade your code quality?</h2>

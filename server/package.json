@@ -5,8 +5,9 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
